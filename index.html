@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Matrix Code Rain</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: black;
+            font-family: 'Courier New', monospace;
+        }
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="matrix"></canvas>
+
+    <script>
+        // Matrix characters - Katakana, Latin, and some symbols
+        const chars = "アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz#$%&()*+,-./:;<=>?@[\\]^_`{|}~";
+        
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
+        
+        // Set canvas to full window size
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        // Character size and columns
+        const fontSize = 16;
+        const columns = Math.floor(canvas.width / fontSize);
+        
+        // Array to track the Y position of each column
+        const drops = [];
+        for (let i = 0; i < columns; i++) {
+            drops[i] = Math.floor(Math.random() * -100) - 1;
+        }
+        
+        // Different shades of green for the characters
+        const colors = ['#00FF00', '#00CC00', '#009900', '#00AA00', '#00BB00'];
+        
+        // Draw the characters
+        function draw() {
+            // Semi-transparent black rectangle to create trail effect
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            for (let i = 0; i < drops.length; i++) {
+                // Random character
+                const text = chars[Math.floor(Math.random() * chars.length)];
+                
+                // Random color from our green palette
+                ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
+                
+                // Draw character
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                
+                // Reset drop to top when it reaches bottom
+                // Add randomness to make it more organic
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                
+                // Move drop down
+                drops[i]++;
+            }
+        }
+        
+        // Set font and start animation
+        ctx.font = fontSize + 'px monospace';
+        setInterval(draw, 33); // ~30fps
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>
